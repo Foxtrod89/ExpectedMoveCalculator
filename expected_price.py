@@ -4,6 +4,7 @@ import argparse
 import math
 import requests
 import yfinance as yf
+from bs4 import BeautifulSoup
 from datetime import datetime
 
 def parse_args():
@@ -50,10 +51,13 @@ def get_expected_move(stock_name, days):
     pre_close = float(hist.Close[0])
     print(f"Last close price: {pre_close}")
 
-    response_content = str(requests.get(f'https://marketchameleon.com/Overview/{stock_name}/IV/').content)
-    iv_str = response_content.split(f"{stock_name} IV Percentile Rank</h3>\\r\\n        <p>\\r\\n            ")[1].split("which is in the <strong>")[0]
-
-    iv = float(iv_str.split("is ")[1].split(",")[0])
+   #response_content = str(requests.get(f'https://marketchameleon.com/Overview/{stock_name}/IV/').content)
+    #iv_str = response_content.split(f"{stock_name} IV Percentile Rank</h3>\\r\\n        <p>\\r\\n            ")[1].split("which is in the <strong>")[0]
+    response_content = requests.get(f'https://volafy.net/equity/{stock_name}')
+    soup = BeautifulSoup(response_content.content)
+    page = soup.findAll('b')[0].get_text()
+    ivString = page.split('Implied Volatility:')[1].split('%')[0]
+    iv = float(ivString)
     print(f"{stock_name} IV: {iv}")
 
     expected_move = pre_close * (iv / 100) * math.sqrt(days / 365)
