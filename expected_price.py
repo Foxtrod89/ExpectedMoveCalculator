@@ -5,7 +5,6 @@ import math
 import requests
 import yfinance as yf
 from bs4 import BeautifulSoup
-from datetime import datetime
 
 def parse_args():
     help_message = """
