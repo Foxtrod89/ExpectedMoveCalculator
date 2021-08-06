@@ -54,7 +54,7 @@ def get_expected_move(stock_name, days):
    #response_content = str(requests.get(f'https://marketchameleon.com/Overview/{stock_name}/IV/').content)
     #iv_str = response_content.split(f"{stock_name} IV Percentile Rank</h3>\\r\\n        <p>\\r\\n            ")[1].split("which is in the <strong>")[0]
     response_content = requests.get(f'https://volafy.net/equity/{stock_name}')
-    soup = BeautifulSoup(response_content.content)
+    soup = BeautifulSoup(response_content.content,features="lxml")
     page = soup.findAll('b')[0].get_text()
     ivString = page.split('Implied Volatility:')[1].split('%')[0]
     iv = float(ivString)
